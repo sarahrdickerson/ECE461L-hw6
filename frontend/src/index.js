@@ -71,6 +71,7 @@ class Project extends React.Component {
         super(props);
         this.state = {
             projectName: props.projectName,
+            projectId: props.projectId,
             numHwSets: 4, // TODO: connect to display
             hwSets: [
                 <HWSet hwSetNum={1} hwSetCapacity={100} authorizedUsers={["sarah, carlos"]}/>,
@@ -112,7 +113,9 @@ class Project extends React.Component {
                             <p>HW Sets:</p>
                         </Grid>
                         <Grid item xs={12}>
-                            {this.state.hwSets}
+                            {this.state.hwSets.map((hwSet, index) => (
+                                <div key={index}> {hwSet} </div>
+                            ))}
                         </Grid>
                         <Grid item xs={12}>
                             {interactButton}
@@ -144,16 +147,16 @@ class Projects extends React.Component {
                 <h1>Projects</h1>
                 <Grid container spacing={1}>
                     <Grid item xs={6}>
-                        <Project projectName={"Project 1"} authorizedUsers={"srd2729, cba9282, db392, mpa391"}/>
+                        <Project projectName={"Project 1"} projectId={1} authorizedUsers={"srd2729, cba9282, db392, mpa391"}/>
                     </Grid>
                     <Grid item xs={6}>
-                        <Project projectName={"Project 2"} authorizedUsers={"bds2342, dis2342, be323, mpo9382, dt432"}/>
+                        <Project projectName={"Project 2"} projectId={2} authorizedUsers={"bds2342, dis2342, be323, mpo9382, dt432"}/>
                     </Grid>
                     <Grid item xs={6}>
-                        <Project projectName={"Project 3"} authorizedUsers={"dba123, ds342, mo436, pl583"}/>
+                        <Project projectName={"Project 3"} projectId={3} authorizedUsers={"dba123, ds342, mo436, pl583"}/>
                     </Grid>
                     <Grid item xs={6}>
-                        <Project projectName={"Project 4"} authorizedUsers={"srd2729"}/>
+                        <Project projectName={"Project 4"} projectId={4} authorizedUsers={"srd2729"}/>
                     </Grid>
                 </Grid>
             </div>

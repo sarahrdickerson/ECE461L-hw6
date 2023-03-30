@@ -15,6 +15,10 @@ class Project:
         self.authUsers.append(user)
         self.numAuthUsers += 1
 
+    def addAuthUsers(self, users):
+        self.authUsers.extend(users)
+        self.numAuthUsers += len(users)
+
     def getHwSets(self):
         return self.__hwSets
 
@@ -28,12 +32,18 @@ class Project:
         return self.__name
 
     def removeHwSet(self, hwSet):
-        self.__hwSets.remove(hwSet)
-        self.__numHwSets -= 1
+        if hwSet in self.__hwSets:
+            self.__hwSets.remove(hwSet)
+            self.__numHwSets -= 1
+            return True
+        return False
 
     def removeAuthUser(self, user):
-        self.authUsers.remove(user)
-        self.numAuthUsers -= 1
+        if user in self.authUsers:
+            self.authUsers.remove(user)
+            self.numAuthUsers -= 1
+            return True
+        return False
 
 
 class HwSet:
