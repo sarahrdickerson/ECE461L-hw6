@@ -11,7 +11,7 @@
 from flask import Flask, jsonify, request
 import project
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../frontend/build', static_url_path='/')
 projectDb = []
 
 proj1 = project.Project('Project 1', 1)
@@ -47,14 +47,14 @@ proj4.addHwSet(project.HwSet('HWSet 4', 10))
 projectDb.append(proj4)
 
 
-@app.route('/test', methods=['GET', 'POST'])
-def test():
-    return jsonify({'message': 'It works!'})
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
 
 
-@app.route('/userdata', methods=['GET'])
-def getUserData():
-    return jsonify({'len': len(projectDb)})
+@app.errorhandler(404)
+def not_found(e):
+    return app.send_static_file('index.html')
 
 
 @app.route('/api/checkin_hardware/<int:projectid>/<int:qty>', methods=['POST'])
@@ -109,4 +109,4 @@ def resetHardwareSets():
 
 
 if __name__ == '__main__':
-    app.run(port=8000, debug=True)
+    app.run(host='0.0.0.0', debug=False, port=os.environ.get('PORT', 80))
