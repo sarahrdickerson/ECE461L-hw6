@@ -57,24 +57,28 @@ def getUserData():
     return jsonify({'len': len(projectDb)})
 
 
-@app.route('/api/checkin_hardware', methods=['POST'])
+@app.route('/api/checkin_hardware/<int:projectid>/<int:qty>', methods=['POST'])
 def checkIn_hardware(projectid, qty):
-    hwSetNum = request.json['hwSetNum']
+    hwSetNum = int(request.args.get('hwSetNum'))
+    foundProject = False
     for proj in projectDb:
         if proj.getProjectId() == projectid:
-            if proj.getHwSets()[hwSetNum].checkIn(qty):
-                return jsonify({'success': True})
-    return jsonify({'success': False})
+            foundProject = True
+            if proj.getHwSets()[hwSetNum-1].checkIn(qty):
+                return jsonify({'success': True, 'foundProject': foundProject})
+    return jsonify({'success': False, 'foundProject': foundProject})
 
 
-@app.route('/api/checkout_hardware', methods=['POST'])
+@app.route('/api/checkout_hardware/<int:projectid>/<int:qty>', methods=['POST'])
 def checkOut_hardware(projectid, qty):
-    hwSetNum = request.json['hwSetNum']
+    hwSetNum = int(request.args.get('hwSetNum'))
+    foundProject = False
     for proj in projectDb:
         if proj.getProjectId() == projectid:
-            if proj.getHwSets()[hwSetNum].checkOut(qty):
-                return jsonify({'success': True})
-    return jsonify({'success': False})
+            foundProject = True
+            if proj.getHwSets()[hwSetNum-1].checkOut(qty):
+                return jsonify({'success': True, 'foundProject': foundProject})
+    return jsonify({'success': False, 'foundProject': foundProject})
 
 
 @app.route('/api/join', methods=['POST'])

@@ -3,6 +3,7 @@ import { padding } from '@mui/system';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+// import axios from './api/axios';
 
 class HWSet extends React.Component {
     constructor(props) {
@@ -12,6 +13,7 @@ class HWSet extends React.Component {
             hwSetCheckedOut: 0,
             hwSetCapacity: props.hwSetCapacity,
             val: 0,
+            projectId: props.projectId,
         };
     }
 
@@ -25,7 +27,27 @@ class HWSet extends React.Component {
         } else if (qty > this.state.hwSetCheckedOut) {
             alert("Cannot checkin more than checked out");
         } else if (qty <= this.state.hwSetCheckedOut) {
-            this.setState({hwSetCheckedOut: parseInt(this.state.hwSetCheckedOut) - parseInt(qty)});
+            let nQty = parseInt(qty);
+            let pid = parseInt(this.state.projectId);
+            fetch(`/api/checkin_hardware/${pid}/${nQty}?hwSetNum=${this.state.hwSetNum}`,
+                {
+                    method: "POST",
+                }
+            ).then((response) => {
+                return response.json();
+            }).then((data) => {
+                console.log(data)
+                if(data.success){
+                    this.setState({hwSetCheckedOut: parseInt(this.state.hwSetCheckedOut) - parseInt(qty)});
+                    alert(qty + " hardware checked in.")
+                } else {
+                    alert("Unable to check in hardware here.")
+                }
+            }).catch((error) => {
+                console.log(error)
+                alert("Unable to check in hardware.")
+            });
+            return;
         } else {
             alert("Invalid quantity");
         }
@@ -40,7 +62,27 @@ class HWSet extends React.Component {
             alert("Cannot checkout more than available");
             return;
         } else if (qty <= this.state.hwSetCapacity - this.state.hwSetCheckedOut) {
-            this.setState({hwSetCheckedOut: parseInt(this.state.hwSetCheckedOut) + parseInt(qty)});
+            // this.setState({hwSetCheckedOut: parseInt(this.state.hwSetCheckedOut) + parseInt(qty)});
+            let nQty = parseInt(qty);
+            let pid = parseInt(this.state.projectId);
+            fetch(`/api/checkout_hardware/${pid}/${nQty}?hwSetNum=${this.state.hwSetNum}`,
+                {
+                    method: "POST",
+                }
+            ).then((response) => {
+                return response.json();
+            }).then((data) => {
+                console.log(data)
+                if(data.success){
+                    this.setState({hwSetCheckedOut: parseInt(this.state.hwSetCheckedOut) + parseInt(qty)});
+                    alert(qty + " hardware checked out.")
+                } else {
+                    alert("Unable to check out hardware here.")
+                }
+            }).catch((error) => {
+                console.log(error)
+                alert("Unable to check out hardware.")
+            });
             return;
         } else {
             alert("Invalid quantity");
@@ -74,10 +116,10 @@ class Project extends React.Component {
             projectId: props.projectId,
             numHwSets: 4, // TODO: connect to display
             hwSets: [
-                <HWSet hwSetNum={1} hwSetCapacity={100} authorizedUsers={["sarah, carlos"]}/>,
-                <HWSet hwSetNum={2} hwSetCapacity={50}/>,
-                <HWSet hwSetNum={3} hwSetCapacity={25}/>,
-                <HWSet hwSetNum={4} hwSetCapacity={10}/>,
+                <HWSet hwSetNum={1} hwSetCapacity={100} projectId={props.projectId} authorizedUsers={["sarah, carlos"]}/>,
+                <HWSet hwSetNum={2} hwSetCapacity={50} projectId={props.projectId}/>,
+                <HWSet hwSetNum={3} hwSetCapacity={25} projectId={props.projectId}/>,
+                <HWSet hwSetNum={4} hwSetCapacity={10} projectId={props.projectId}/>,
             ],
             joined: false,
             authorizedUsers: props.authorizedUsers,
