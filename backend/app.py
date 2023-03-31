@@ -81,21 +81,23 @@ def checkOut_hardware(projectid, qty):
     return jsonify({'success': False, 'foundProject': foundProject, 'projectId': projectid})
 
 
-@app.route('/api/join', methods=['POST'])
+@app.route('/api/joinProject/<int:projectid>', methods=['POST'])
 def joinProject(projectid):
+    foundProject = False
     for proj in projectDb:
         if proj.getProjectId() == projectid:
-            proj.addAuthUsers([request.json['username']])
-            return jsonify({'success': True})
-    return jsonify({'success': False})
+            foundProject = True
+            # proj.addAuthUsers([request.json['username']])
+            return jsonify({'success': True, 'foundProject': foundProject, 'projectId': projectid})
+    return jsonify({'success': False, 'foundProject': foundProject, 'projectId': projectid})
 
 
-@app.route('/api/leave', methods=['POST'])
+@app.route('/api/leaveProject/<int:projectid>', methods=['POST'])
 def leaveProject(projectid):
     for proj in projectDb:
         if proj.getProjectId() == projectid:
-            if proj.removeAuthUsers([request.json['username']]):
-                return jsonify({'success': True})
+            # if proj.removeAuthUsers([request.json['username']]):
+            return jsonify({'success': True})
     return jsonify({'success': False})
 
 

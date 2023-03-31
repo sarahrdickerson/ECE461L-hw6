@@ -117,7 +117,7 @@ class Project extends React.Component {
             projectId: props.projectId,
             numHwSets: 4, // TODO: connect to display
             hwSets: [
-                <HWSet hwSetNum={1} hwSetCapacity={100} projectId={props.projectId} authorizedUsers={["sarah, carlos"]}/>,
+                <HWSet hwSetNum={1} hwSetCapacity={100} projectId={props.projectId}/>,
                 <HWSet hwSetNum={2} hwSetCapacity={50} projectId={props.projectId}/>,
                 <HWSet hwSetNum={3} hwSetCapacity={25} projectId={props.projectId}/>,
                 <HWSet hwSetNum={4} hwSetCapacity={10} projectId={props.projectId}/>,
@@ -128,7 +128,47 @@ class Project extends React.Component {
     }
 
     joinLeave() {
-        this.setState({joined: !this.state.joined});
+        // this.setState({joined: !this.state.joined});
+        let pid = parseInt(this.state.projectId);
+        if(this.state.joined){
+            fetch(`/api/leaveProject/${pid}`,
+                {
+                    method: "POST",
+                }
+            ).then((response) => {
+                return response.json();
+            }).then((data) => {
+                console.log(data)
+                if(data.success){
+                    this.setState({joined: false});
+                    alert("Left " + pid)
+                } else {
+                    alert("Unable to leave " + pid)
+                }
+            }).catch((error) => {
+                console.log(error)
+                alert("Unable to leave " + pid)
+            });
+        } else {
+            fetch(`/api/joinProject/${pid}`,
+                {
+                    method: "POST",
+                }
+            ).then((response) => {
+                return response.json();
+            }).then((data) => {
+                console.log(data)
+                if(data.success){
+                    this.setState({joined: true});
+                    alert("Joined " + pid)
+                } else {
+                    alert("Unable to join " + pid)
+                }
+            }).catch((error) => {
+                console.log(error)
+                alert("Unable to join " + pid)
+            });
+        }
     }
 
     render() {
