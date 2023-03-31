@@ -45,6 +45,20 @@ class Project:
             return True
         return False
 
+    def resetHwSets(self):
+        for hwSet in self.__hwSets:
+            hwSet.setNumCheckedOut(0)
+
+    def to_dict(self):
+        return {
+            'name': self.__name,
+            'projectId': self.__projectId,
+            'numHwSets': self.__numHwSets,
+            'hwSets': [h.to_dict() for h in self.__hwSets],
+            'numAuthUsers': self.numAuthUsers,
+            'authUsers': self.authUsers
+        }
+
 
 class HwSet:
     def __init__(self, name, capacity=0):
@@ -83,3 +97,10 @@ class HwSet:
 
     def isFull(self):
         return self.__numCheckedOut == self.__capacity
+
+    def to_dict(self):
+        return {
+            'name': self.__name,
+            'capacity': self.__capacity,
+            'numCheckedOut': self.__numCheckedOut
+        }

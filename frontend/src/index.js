@@ -1,8 +1,9 @@
-import { Stack, Grid, Container,Box, TextField, ButtonGroup, Button } from '@mui/material';
-import { padding } from '@mui/system';
+import { Stack, Grid,Box, TextField, ButtonGroup, Button } from '@mui/material';
+// import { padding } from '@mui/system';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+import { useEffect } from 'react';
 // import axios from './api/axios';
 
 class HWSet extends React.Component {
@@ -207,5 +208,33 @@ class Projects extends React.Component {
     }
 }
 
+function App() {
+    useEffect(() => {
+        const handleBeforeUnload = (event) => {
+            fetch('/api/resetHardwareSets')
+                .then((response) => {
+                    return response.json();
+                }
+            ).then((data) => {
+                console.log(data)
+                }
+            ).catch((error) => {
+                console.log(error)
+            });
+        };
+        window.addEventListener("beforeunload", handleBeforeUnload);
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+    }, []);
+
+
+    return (
+        <div>
+            <Projects />
+        </div>
+    );
+}
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<Projects />);
+root.render(<App />);

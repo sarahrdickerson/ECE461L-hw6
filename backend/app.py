@@ -65,8 +65,8 @@ def checkIn_hardware(projectid, qty):
         if proj.getProjectId() == projectid:
             foundProject = True
             if proj.getHwSets()[hwSetNum-1].checkIn(qty):
-                return jsonify({'success': True, 'foundProject': foundProject})
-    return jsonify({'success': False, 'foundProject': foundProject})
+                return jsonify({'success': True, 'foundProject': foundProject, 'projectId': projectid, 'hwSetNum': hwSetNum, 'qty': qty})
+    return jsonify({'success': False, 'foundProject': foundProject, 'projectId': projectid})
 
 
 @app.route('/api/checkout_hardware/<int:projectid>/<int:qty>', methods=['POST'])
@@ -77,8 +77,8 @@ def checkOut_hardware(projectid, qty):
         if proj.getProjectId() == projectid:
             foundProject = True
             if proj.getHwSets()[hwSetNum-1].checkOut(qty):
-                return jsonify({'success': True, 'foundProject': foundProject})
-    return jsonify({'success': False, 'foundProject': foundProject})
+                return jsonify({'success': True, 'foundProject': foundProject, 'projectId': projectid, 'hwSetNum': hwSetNum, 'qty': qty})
+    return jsonify({'success': False, 'foundProject': foundProject, 'projectId': projectid})
 
 
 @app.route('/api/join', methods=['POST'])
@@ -97,6 +97,13 @@ def leaveProject(projectid):
             if proj.removeAuthUsers([request.json['username']]):
                 return jsonify({'success': True})
     return jsonify({'success': False})
+
+
+@app.route('/api/resetHardwareSets', methods=['GET', 'POST'])
+def resetHardwareSets():
+    for proj in projectDb:
+        proj.resetHwSets()
+    return jsonify({'success': True})
 
 
 if __name__ == '__main__':
