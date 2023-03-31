@@ -30,7 +30,7 @@ class HWSet extends React.Component {
         } else if (qty <= this.state.hwSetCheckedOut) {
             let nQty = parseInt(qty);
             let pid = parseInt(this.state.projectId);
-            fetch(`/api/checkin_hardware/${pid}/${nQty}?hwSetNum=${this.state.hwSetNum}`,
+            fetch(`/api/checkIn_hardware/${pid}/${nQty}?hwSetNum=${this.state.hwSetNum}`,
                 {
                     method: "POST",
                 }
@@ -66,7 +66,7 @@ class HWSet extends React.Component {
             // this.setState({hwSetCheckedOut: parseInt(this.state.hwSetCheckedOut) + parseInt(qty)});
             let nQty = parseInt(qty);
             let pid = parseInt(this.state.projectId);
-            fetch(`/api/checkout_hardware/${pid}/${nQty}?hwSetNum=${this.state.hwSetNum}`,
+            fetch(`/api/checkOut_hardware/${pid}/${nQty}?hwSetNum=${this.state.hwSetNum}`,
                 {
                     method: "POST",
                 }

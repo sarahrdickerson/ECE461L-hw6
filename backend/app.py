@@ -12,8 +12,11 @@ from flask import Flask, jsonify, request
 import project
 
 app = Flask(__name__)
+
+# Project database frontend pulls from
 projectDb = []
 
+# Create all projects and their hw sets and add to database
 proj1 = project.Project('Project 1', 1)
 proj1.addAuthUsers(['srd2729', 'cba9282', 'db392', 'mpa391'])
 proj1.addHwSet(project.HwSet('HWSet 1', 100))
@@ -57,7 +60,7 @@ def getUserData():
     return jsonify({'len': len(projectDb)})
 
 
-@app.route('/api/checkin_hardware/<int:projectid>/<int:qty>', methods=['POST'])
+@app.route('/api/checkIn_hardware/<int:projectid>/<int:qty>', methods=['POST'])
 def checkIn_hardware(projectid, qty):
     hwSetNum = int(request.args.get('hwSetNum'))
     foundProject = False
@@ -69,7 +72,7 @@ def checkIn_hardware(projectid, qty):
     return jsonify({'success': False, 'foundProject': foundProject, 'projectId': projectid})
 
 
-@app.route('/api/checkout_hardware/<int:projectid>/<int:qty>', methods=['POST'])
+@app.route('/api/checkOut_hardware/<int:projectid>/<int:qty>', methods=['POST'])
 def checkOut_hardware(projectid, qty):
     hwSetNum = int(request.args.get('hwSetNum'))
     foundProject = False
@@ -87,7 +90,6 @@ def joinProject(projectid):
     for proj in projectDb:
         if proj.getProjectId() == projectid:
             foundProject = True
-            # proj.addAuthUsers([request.json['username']])
             return jsonify({'success': True, 'foundProject': foundProject, 'projectId': projectid})
     return jsonify({'success': False, 'foundProject': foundProject, 'projectId': projectid})
 
@@ -96,7 +98,6 @@ def joinProject(projectid):
 def leaveProject(projectid):
     for proj in projectDb:
         if proj.getProjectId() == projectid:
-            # if proj.removeAuthUsers([request.json['username']]):
             return jsonify({'success': True})
     return jsonify({'success': False})
 
